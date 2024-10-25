@@ -64,46 +64,6 @@ const CampaignForm = () => {
 
     // Visual Request Document formatı
     let visualRequestDocument = "";
-
-    // Eğer Visual Request Document seçilmişse, içeriği oluştur
-    // if (demands.visualRequest) {
-    //   visualRequestDocument += JSON.stringify({
-    //     generalDefinitions: {
-    //       company: companyInfo.name,
-    //       campaignName: campaignInfo.name,
-    //       finalUrl: campaignInfo.finalUrl,
-    //       goals: campaignInfo.goal,
-    //       targetAudience: campaignInfo.audience,
-    //       focusPoints: campaignInfo.focusPoints,
-    //       products: products.map((product) => ({
-    //         name: product.name,
-    //         url: product.url,
-    //         // data: product.data
-    //       }))
-    //     },
-    //     keyFeatures: "Key Features (fill in at least 5)",
-    //     visualRequests: {
-    //       generalImages: {
-    //         quantity: " ",
-    //         messages: " ",
-    //         notes: " "
-    //       },
-    //       productImages: products.map((product, index) => ({
-    //         product: `Product-${index + 1}`,
-    //         quantity: " ",
-    //         messages: " ",
-    //         notes: " "
-    //       })),
-    //       videoRequests: {
-    //         quantity: " ",
-    //         duration: " ",
-    //         messages: " ",
-    //         notes: " "
-    //       }
-    //     }
-    //   }, null, 2);
-    // }
-
     if (demands.visualRequest) {
       visualRequestDocument += "1. General Definitions\n";
       visualRequestDocument += `a. Company: ${companyInfo.name}\n`;
