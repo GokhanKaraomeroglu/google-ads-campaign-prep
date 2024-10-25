@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const CampaignForm = () => {
+const GoogleAds = () => {
   const [companyInfo, setCompanyInfo] = useState({ name: "", url: "" });
   const [campaignInfo, setCampaignInfo] = useState({
     name: "",
@@ -136,17 +136,20 @@ const CampaignForm = () => {
         }
       );
 
-    //   setResponse(apiResponse.data.choices[0].message.content);
-      const cleanResponse = apiResponse.data.choices[0].message.content.replace(/[*#]+/g, "").replace(/\n+/g, "\n").trim();
-      setResponse(cleanResponse); 
+      //   setResponse(apiResponse.data.choices[0].message.content);
+      const cleanResponse = apiResponse.data.choices[0].message.content
+        .replace(/[*#]+/g, "")
+        .replace(/\n+/g, "\n")
+        .trim();
+      setResponse(cleanResponse);
     } catch (error) {
       console.error(error);
     }
   };
-  console.log("Response : ", response)
+  console.log("Response : ", response);
   return (
     <div className="container mt-5">
-      <h1 className="text-center mb-4">Google Ads Campaign Preparation Form</h1>
+      <h1 className="text-center mb-4">Google Ads Campaign Preparation</h1>
       <div className="row">
         <div className="col-md-6">
           <form onSubmit={handleSubmit} className="shadow p-4 bg-light rounded">
@@ -269,132 +272,144 @@ const CampaignForm = () => {
             {/* Part-4: Demand */}
             <h4 className="mb-3">Demand</h4>
 
-<div className="mb-3 row align-items-center"> 
-  <div className="col-auto">
-    <input
-      type="checkbox"
-      name="headlines30"
-      checked={demands.headlines30 > 0}
-      onChange={handleDemandChange}
-      className="me-2"
-    />
-  </div>
-  <label className="col-form-label col-auto">Number of 30 Character Headlines:</label>
-  <div className="col-auto">
-    <input
-      type="number"
-      name="headlines30"
-      value={demands.headlines30}
-      onChange={handleDemandChange}
-      min="0"
-      className="form-control"
-    />
-  </div>
-</div>
+            <div className="mb-3 row align-items-center">
+              <div className="col-auto">
+                <input
+                  type="checkbox"
+                  name="headlines30"
+                  checked={demands.headlines30 > 0}
+                  onChange={handleDemandChange}
+                  className="me-2"
+                />
+              </div>
+              <label className="col-form-label col-auto">
+                Number of 30 Character Headlines:
+              </label>
+              <div className="col-auto">
+                <input
+                  type="number"
+                  name="headlines30"
+                  value={demands.headlines30}
+                  onChange={handleDemandChange}
+                  min="0"
+                  className="form-control"
+                />
+              </div>
+            </div>
 
-<div className="mb-3 row align-items-center">
-  <div className="col-auto">
-    <input
-      type="checkbox"
-      name="headlines90"
-      checked={demands.headlines90 > 0}
-      onChange={handleDemandChange}
-      className="me-2"
-    />
-  </div>
-  <label className="col-form-label col-auto">Number of 90 Character Long Headlines:</label>
-  <div className="col-auto">
-    <input
-      type="number"
-      name="headlines90"
-      value={demands.headlines90}
-      onChange={handleDemandChange}
-      min="0"
-      className="form-control"
-    />
-  </div>
-</div>
+            <div className="mb-3 row align-items-center">
+              <div className="col-auto">
+                <input
+                  type="checkbox"
+                  name="headlines90"
+                  checked={demands.headlines90 > 0}
+                  onChange={handleDemandChange}
+                  className="me-2"
+                />
+              </div>
+              <label className="col-form-label col-auto">
+                Number of 90 Character Long Headlines:
+              </label>
+              <div className="col-auto">
+                <input
+                  type="number"
+                  name="headlines90"
+                  value={demands.headlines90}
+                  onChange={handleDemandChange}
+                  min="0"
+                  className="form-control"
+                />
+              </div>
+            </div>
 
-<div className="mb-3 row align-items-center">
-  <div className="col-auto">
-    <input
-      type="checkbox"
-      name="descriptions60"
-      checked={demands.descriptions60 > 0}
-      onChange={handleDemandChange}
-      className="me-2"
-    />
-  </div>
-  <label className="col-form-label col-auto">Number of 60 Character Descriptions:</label>
-  <div className="col-auto">
-    <input
-      type="number"
-      name="descriptions60"
-      value={demands.descriptions60}
-      onChange={handleDemandChange}
-      min="0"
-      className="form-control"
-    />
-  </div>
-</div>
+            <div className="mb-3 row align-items-center">
+              <div className="col-auto">
+                <input
+                  type="checkbox"
+                  name="descriptions60"
+                  checked={demands.descriptions60 > 0}
+                  onChange={handleDemandChange}
+                  className="me-2"
+                />
+              </div>
+              <label className="col-form-label col-auto">
+                Number of 60 Character Descriptions:
+              </label>
+              <div className="col-auto">
+                <input
+                  type="number"
+                  name="descriptions60"
+                  value={demands.descriptions60}
+                  onChange={handleDemandChange}
+                  min="0"
+                  className="form-control"
+                />
+              </div>
+            </div>
 
-<div className="mb-3 row align-items-center">
-  <div className="col-auto">
-    <input
-      type="checkbox"
-      name="descriptions90"
-      checked={demands.descriptions90 > 0}
-      onChange={handleDemandChange}
-      className="me-2"
-    />
-  </div>
-  <label className="col-form-label col-auto">Number of 90 Character Descriptions:</label>
-  <div className="col-auto">
-    <input
-      type="number"
-      name="descriptions90"
-      value={demands.descriptions90}
-      onChange={handleDemandChange}
-      min="0"
-      className="form-control"
-    />
-  </div>
-</div>
+            <div className="mb-3 row align-items-center">
+              <div className="col-auto">
+                <input
+                  type="checkbox"
+                  name="descriptions90"
+                  checked={demands.descriptions90 > 0}
+                  onChange={handleDemandChange}
+                  className="me-2"
+                />
+              </div>
+              <label className="col-form-label col-auto">
+                Number of 90 Character Descriptions:
+              </label>
+              <div className="col-auto">
+                <input
+                  type="number"
+                  name="descriptions90"
+                  value={demands.descriptions90}
+                  onChange={handleDemandChange}
+                  min="0"
+                  className="form-control"
+                />
+              </div>
+            </div>
 
-<div className="mb-3 row align-items-center">
-  <div className="col-auto">
-    <input
-      type="checkbox"
-      name="searchTerms"
-      checked={demands.searchTerms > 0}
-      onChange={handleDemandChange}
-      className="me-2"
-    />
-  </div>
-  <label className="col-form-label col-auto">Number of Search Terms:</label>
-  <div className="col-auto">
-    <input
-      type="number"
-      name="searchTerms"
-      value={demands.searchTerms}
-      onChange={handleDemandChange}
-      min="0"
-      className="form-control"
-    />
-  </div>
-</div>
-<div className="mb-3 row align-items-center">
-  <div className="col-auto">
-    <input
-      type="checkbox"
-      name="visualRequest"
-      checked={demands.visualRequest}
-      onChange={handleDemandChange}
-      className="me-2"
-    />
-  </div>
-  <label className="col-form-label col-auto">Visual Request Document</label>
-</div>
+            <div className="mb-3 row align-items-center">
+              <div className="col-auto">
+                <input
+                  type="checkbox"
+                  name="searchTerms"
+                  checked={demands.searchTerms > 0}
+                  onChange={handleDemandChange}
+                  className="me-2"
+                />
+              </div>
+              <label className="col-form-label col-auto">
+                Number of Search Terms:
+              </label>
+              <div className="col-auto">
+                <input
+                  type="number"
+                  name="searchTerms"
+                  value={demands.searchTerms}
+                  onChange={handleDemandChange}
+                  min="0"
+                  className="form-control"
+                />
+              </div>
+            </div>
+            <div className="mb-3 row align-items-center">
+              <div className="col-auto">
+                <input
+                  type="checkbox"
+                  name="visualRequest"
+                  checked={demands.visualRequest}
+                  onChange={handleDemandChange}
+                  className="me-2"
+                />
+              </div>
+              <label className="col-form-label col-auto">
+                Visual Request Document
+              </label>
+            </div>
 
             <button type="submit" className="btn btn-primary mt-3">
               Submit
@@ -414,4 +429,4 @@ const CampaignForm = () => {
   );
 };
 
-export default CampaignForm;
+export default GoogleAds;
