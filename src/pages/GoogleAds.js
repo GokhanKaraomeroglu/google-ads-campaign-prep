@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import { GoogleGenerativeAI } from "@google/generative-ai";
 import "bootstrap/dist/css/bootstrap.min.css";
+
+import GptResponse from "./GptResponse.js";
+import GeminiResponse from "./GeminiResponse.js";
 
 const GoogleAds = () => {
   const [companyInfo, setCompanyInfo] = useState({ name: "", url: "" });
@@ -23,9 +26,9 @@ const GoogleAds = () => {
     searchTerms: 25,
     visualRequest: false,
   });
-  const [imageDemands, setImageDemands] = useState("")
-  const [responseGpt, setResponseGpt] = useState(null);
-  const [responseGemini, setResponseGemini] = useState(null);
+  const [imageDemandReq, setImageDemandReq] = useState(false)
+  const [responseGpt, setResponseGpt] = useState("Response from ChatGpt will appear here.");
+  const [responseGemini, setResponseGemini] = useState("Response from Gemini will appear here.");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
@@ -117,7 +120,9 @@ const GoogleAds = () => {
         campaign: campaignInfo,
         products,
         textdemands: `To create the texts in the campaign, you need to prepare in English, ${demands.headlines30} 30-character Headlines, ${demands.headlines90} 90-character Long Headlines, ${demands.descriptions60} 60-character Descriptions, ${demands.descriptions90} 90-character Descriptions, ${demands.searchTerms} Search Terms, Don't use exclamation marks`,
-        imagedemands: `To create the visual assets in the campaign, you need to prepare a Visual Request Document. The Format of the document is below. You must fill in all fields of the document as required. You should generate the messages as texts on the images. Messages are the most important part of the Visual Request Document. You should write at least 5 messages per messages part.  \n ${visualRequestDocument}`,
+        ...(imageDemandReq && {
+          imagedemands: `To create the visual assets in the campaign, you need to prepare a Visual Request Document. The Format of the document is below. You must fill in all fields of the document as required. You should generate the messages as texts on the images. Messages are the most important part of the Visual Request Document. You should write at least 5 messages per messages part. \n ${visualRequestDocument}`
+        }),
       };
 
       if (model === "chatgpt") {
@@ -221,6 +226,10 @@ const GoogleAds = () => {
     setResponseGpt("");
     setResponseGemini("");
   };
+
+  useEffect(() => {
+    setImageDemandReq(demands.visualRequest)
+  }, [demands.visualRequest]);
 
   console.log("Response : ", responseGemini);
   return (
@@ -539,28 +548,8 @@ const GoogleAds = () => {
             </div>
           </form>
         </div>
-        <div className="col-md-4 d-flex">
-          <div
-            className="shadow-lg p-4 bg-light rounded flex-fill"
-            style={{ minHeight: "100%", width: "100%" }}
-          >
-            <h4>Response ChatGpt</h4>
-            <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-              {responseGpt || "Response from ChatGpt will appear here."}
-            </pre>
-          </div>
-        </div>
-        <div className="col-md-4 d-flex">
-          <div
-            className="shadow-lg p-4 bg-light rounded flex-fill"
-            style={{ minHeight: "100%", width: "100%" }}
-          >
-            <h4>Response Gemini </h4>
-            <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-              {responseGemini || "Response from Gemini will appear here."}
-            </pre>
-          </div>
-        </div>
+        <GptResponse gptResponse={responseGpt}/>
+        <GeminiResponse geminiResponse={responseGemini}/>
       </div>
     </div>
   );

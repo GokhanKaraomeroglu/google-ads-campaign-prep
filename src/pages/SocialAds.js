@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import GptResponse from "./GptResponse.js";
+import GeminiResponse from "./GeminiResponse.js";
+
 const SocialAds = () => {
   const [companyInfo, setCompanyInfo] = useState({ name: "", url: "" });
   const [campaignInfo, setCampaignInfo] = useState({
@@ -372,28 +375,8 @@ const SocialAds = () => {
             </div>
           </form>
         </div>
-        <div className="col-md-4 d-flex">
-          <div
-            className="shadow-lg p-4 bg-light rounded flex-fill"
-            style={{ minHeight: "100%", width: "100%" }}
-          >
-            <h4>Response ChatGpt</h4>
-            <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-              {responseGpt || "Response from ChatGpt will appear here."}
-            </pre>
-          </div>
-        </div>
-        <div className="col-md-4 d-flex">
-          <div
-            className="shadow-lg p-4 bg-light rounded flex-fill"
-            style={{ minHeight: "100%", width: "100%" }}
-          >
-            <h4>Response Gemini </h4>
-            <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-              {responseGemini || "Response from Gemini will appear here."}
-            </pre>
-          </div>
-        </div>
+        <GptResponse gptResponse={responseGpt}/>
+        <GeminiResponse geminiResponse={responseGemini}/>
       </div>
     </div>
   );

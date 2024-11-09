@@ -40,9 +40,9 @@ const AppNavbar = () => {
               <Nav.Link as={Link} to="/social-ads">
                 Social Ads
               </Nav.Link>
-              <Nav.Link as={Link} to="/seo">
+              {/* <Nav.Link as={Link} to="/seo">
                 SEO
-              </Nav.Link>
+              </Nav.Link> */}
             </Nav>
             {/* <Nav fill variant="tabs" defaultActiveKey="/google-ads">
               <Nav.Item>
