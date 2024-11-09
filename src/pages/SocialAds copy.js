@@ -11,7 +11,6 @@ const SocialAds = () => {
     goal: "",
     audience: "",
     adjectives: "",
-    additionalInfo: "",
   });
   const [products, setProducts] = useState([{ name: "", data: "", url: "" }]);
   const [demands, setDemands] = useState({
@@ -68,10 +67,12 @@ const SocialAds = () => {
    
     const requestData = {
       request: `  ${companyInfo.name} company sells products below. I’m running a ${campaignInfo.type} campaign targeting ${campaignInfo.audience}. My brand voice is ${campaignInfo.adjectives}. Campaign Information is below`,
+      // request: `You are preparing Facebook Ads for ${companyInfo.name} company. You will prepare a Facebook Ads ${campaignInfo.type} campaign called ${campaignInfo.name} Campaign Information is below.`,
       campaign: campaignInfo,
       products,
       textdemands: `Write the copy for ${demands.adcopies} Facebook ad variations for my target audience using this copy template ${demands.headlines} 40-character Headlines,  ${demands.descriptions} 30-character Descriptions, ${demands.primarytext} 125 to 300 character Primary text `,
-      };
+      // imagedemands: `To create the visual assets in the campaign, you need to prepare a Visual Request Document. The Format of the document is below. You must fill in all fields of the document as required. You should generate the messages as texts on the images. Messages are the most important part of the Visual Request Document. You should write at least 5 messages per messages part.`,
+    };
 
     // ChatGPT API ayarı
 
@@ -98,6 +99,7 @@ const SocialAds = () => {
           }
         );
 
+        //   setResponse(apiResponse.data.choices[0].message.content);
         const cleanResponse = apiResponse.data.choices[0].message.content
           .replace(/[*#]+/g, "")
           .replace(/\n+/g, "\n")
@@ -110,10 +112,10 @@ const SocialAds = () => {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const prompt = JSON.stringify(requestData);
+        // const prompt = "Write a story about a magic backpack.";
 
         const result = await model.generateContent(prompt);
         console.log(result.response.text());
-
         const cleanResponse = result.response.text()
           .replace(/[*#]+/g, "")
           .replace(/\n+/g, "\n")
@@ -126,63 +128,13 @@ const SocialAds = () => {
       setIsLoading(false);
     }
   };
-  const clearForm = () => {
-    setCompanyInfo({ name: "", url: "" });
-    setCampaignInfo({
-      name: "",
-      type: "",
-      finalUrl: "",
-      goal: "",
-      audience: "",
-      focusPoints: "",
-      additionalInfo: "",
-    });
-    setProducts([{ name: "", data: "", url: "" }]);
-    setDemands({
-      headlines30: 15,
-      headlines90: 5,
-      descriptions60: 1,
-      descriptions90: 4,
-      searchTerms: 25,
-      visualRequest: false,
-    });
-    // setResponseGpt("");
-    // setResponseGemini("");
-  };
-  const clearAll = () => {
-    setCompanyInfo({ name: "", url: "" });
-    setCampaignInfo({
-      name: "",
-      type: "",
-      finalUrl: "",
-      goal: "",
-      audience: "",
-      focusPoints: "",
-      additionalInfo: "",
-    });
-    setProducts([{ name: "", data: "", url: "" }]);
-    setDemands({
-      headlines30: 15,
-      headlines90: 5,
-      descriptions60: 1,
-      descriptions90: 4,
-      searchTerms: 25,
-      visualRequest: false,
-    });
-    setResponseGpt("");
-    setResponseGemini("");
-  };
   console.log("Response : ", responseGemini);
   return (
-<div className="container-fluid mt-5" style={{ width: "100%" }}>
-      <div>
-        <h1 className="container-sm shadow text-center p-4 mb-4">
-        Social Media Campaign Planner
-        </h1>
-      </div>
+    <div className="container mt-5">
+      <h1 className="text-center mb-4">Social Media Campaign Planner</h1>
       <div className="row mt-5">
-        <div className="col-md-4">
-        <form onSubmit={handleSubmit} className="shadow p-4 bg-light rounded">
+        <div className="col-md-6">
+          <form onSubmit={handleSubmit} className="shadow p-4 bg-light rounded">
             {/* Part-1: Company Info */}
             <h4 className="mb-3">Company Info</h4>
             <input
@@ -252,16 +204,6 @@ const SocialAds = () => {
               onChange={handleCampaignChange}
               required
             />
-            <h4 className="mb-3">Additional Info</h4>
-            <textarea
-              className="form-control mb-3"
-              name="additionalInfo"
-              placeholder="Additional Info"
-              value={campaignInfo.additionalInfo}
-              onChange={handleCampaignChange}
-              required
-              style={{ height: "100px" }}
-            />
 
             {/* Part-3: Products Info */}
             <h4 className="mb-3">Products Info</h4>
@@ -312,6 +254,81 @@ const SocialAds = () => {
             {/* Part-4: Demand */}
             <h4 className="mb-3">Demand</h4>
 
+            {/* <div className="mb-3 row align-items-center">
+              <div className="col-auto">
+                <input
+                  type="checkbox"
+                  name="headlines"
+                  checked={demands.headlines > 0}
+                  onChange={handleDemandChange}
+                  className="me-2"
+                />
+              </div>
+              <label className="col-form-label col-auto">
+                Number of Headlines:
+              </label>
+              <div className="col-auto">
+                <input
+                  type="number"
+                  name="headlines"
+                  value={demands.headlines}
+                  onChange={handleDemandChange}
+                  min="0"
+                  className="form-control"
+                />
+              </div>
+            </div>
+
+            <div className="mb-3 row align-items-center">
+              <div className="col-auto">
+                <input
+                  type="checkbox"
+                  name="descriptions"
+                  checked={demands.descriptions > 0}
+                  onChange={handleDemandChange}
+                  className="me-2"
+                />
+              </div>
+              <label className="col-form-label col-auto">
+                Number of Descriptions:
+              </label>
+              <div className="col-auto">
+                <input
+                  type="number"
+                  name="descriptions"
+                  value={demands.descriptions}
+                  onChange={handleDemandChange}
+                  min="0"
+                  className="form-control"
+                />
+              </div>
+            </div>
+
+            <div className="mb-3 row align-items-center">
+              <div className="col-auto">
+                <input
+                  type="checkbox"
+                  name="primarytext"
+                  checked={demands.primarytext > 0}
+                  onChange={handleDemandChange}
+                  className="me-2"
+                />
+              </div>
+              <label className="col-form-label col-auto">
+                Number of Primary Texts:
+              </label>
+              <div className="col-auto">
+                <input
+                  type="number"
+                  name="primarytext"
+                  value={demands.primarytext}
+                  onChange={handleDemandChange}
+                  min="0"
+                  className="form-control"
+                />
+              </div>
+            </div> */}
+
             <div className="mb-3 row align-items-center">
               <div className="col-auto">
                 <input
@@ -341,33 +358,31 @@ const SocialAds = () => {
                 type="button"
                 className="btn btn-primary m-3"
                 onClick={(e) => handleSubmit(e, "chatgpt")} // ChatGPT için tıklama işlevi
-                disabled={isLoading}
+                // disabled={isLoading}
               >
                 {" "}
                 Chat Gpt
+                {/* <img
+                  src={ChatGptLogo}
+                  alt="ChatGPT Logo"
+                  height="100"
+                />{" "} */}
+                {/* ChatGPT logosunu ekleyin */}
               </button>
               <button
                 type="button"
                 className="btn btn-primary m-3"
                 onClick={(e) => handleSubmit(e, "gemini")} // Gemini için tıklama işlevi
-                disabled={isLoading}
+                // disabled={isLoading}
               >
                 {" "}
                 Gemini
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger m-3" // Kırmızı buton rengi
-                onClick={clearForm} // Formu temizleyen işlev
-              >
-                Clear Form
-              </button>
-              <button
-                type="button"
-                className="btn btn-dark m-3" // Kırmızı buton rengi
-                onClick={clearAll} // Formu temizleyen işlev
-              >
-                Clear All
+                {/* <img
+                  src={GeminiLogo}
+                  alt="Gemini Logo"
+                  height="30"
+                />{" "} */}
+                {/* Gemini logosunu ekleyin */}
               </button>
             </div>
           </form>

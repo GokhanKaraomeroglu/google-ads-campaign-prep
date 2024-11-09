@@ -26,7 +26,7 @@ function App() {
     <Router>
       <div>
         <AppNavbar />
-        <main className="container my-5">
+        <main className="container-fluid my-5" >
           <Routes>
             <Route path="/" element={<GoogleAds />} />
             <Route path="/google-ads" element={<GoogleAds />} />
