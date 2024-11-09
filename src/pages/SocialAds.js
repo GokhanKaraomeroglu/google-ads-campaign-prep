@@ -179,13 +179,13 @@ const SocialAds = () => {
   return (
 <div className="container-fluid mt-5" style={{ width: "100%" }}>
       <div>
-        <h1 className="container-sm shadow text-center p-4 mb-4">
+        <h1 className="container-sm shadow-lg text-center p-4 mb-4">
         Social Media Campaign Planner
         </h1>
       </div>
       <div className="row mt-5">
         <div className="col-md-4">
-        <form onSubmit={handleSubmit} className="shadow p-4 bg-light rounded">
+        <form onSubmit={handleSubmit} className="shadow-lg p-4 bg-light rounded">
             {/* Part-1: Company Info */}
             <h4 className="mb-3">Company Info</h4>
             <input
@@ -375,8 +375,8 @@ const SocialAds = () => {
             </div>
           </form>
         </div>
-        <GptResponse gptResponse={responseGpt}/>
-        <GeminiResponse geminiResponse={responseGemini}/>
+        <GptResponse gptResponse={responseGpt} setResponseGpt={setResponseGpt}/>
+        <GeminiResponse geminiResponse={responseGemini} setResponseGemini={setResponseGemini}/>
       </div>
     </div>
   );

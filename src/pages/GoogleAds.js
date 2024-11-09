@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import { GoogleGenerativeAI } from "@google/generative-ai";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import GptResponse from "./GptResponse.js";
 import GeminiResponse from "./GeminiResponse.js";
+// import Anthropic from "./Anthropic.js";
 
 const GoogleAds = () => {
   const [companyInfo, setCompanyInfo] = useState({ name: "", url: "" });
@@ -29,6 +29,7 @@ const GoogleAds = () => {
   const [imageDemandReq, setImageDemandReq] = useState(false)
   const [responseGpt, setResponseGpt] = useState("Response from ChatGpt will appear here.");
   const [responseGemini, setResponseGemini] = useState("Response from Gemini will appear here.");
+  const [responseAnth, setResponseAnth] = useState("Response from Anthropic will appear here.");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
@@ -119,7 +120,7 @@ const GoogleAds = () => {
         request: `You are preparing Google Ads ads for ${companyInfo.name} company. You will prepare a Google Ads ${campaignInfo.type} campaign called ${campaignInfo.name} Campaign Information is below.`,
         campaign: campaignInfo,
         products,
-        textdemands: `To create the texts in the campaign, you need to prepare in English, ${demands.headlines30} 30-character Headlines, ${demands.headlines90} 90-character Long Headlines, ${demands.descriptions60} 60-character Descriptions, ${demands.descriptions90} 90-character Descriptions, ${demands.searchTerms} Search Terms, Don't use exclamation marks`,
+        textdemands: `To create the texts in the campaign, you need to prepare in English, ${demands.headlines30} up to 30-character Headlines, ${demands.headlines90} up to 90-character Long Headlines, ${demands.descriptions60} up to 60-character Descriptions, ${demands.descriptions90} up to 90-character Descriptions, ${demands.searchTerms} up to 80-character Search Terms, Don't use exclamation marks. The number of characters in the texts to be created for the preparation of Google Ads ads is very important. You should stay true to what is desired.`,
         ...(imageDemandReq && {
           imagedemands: `To create the visual assets in the campaign, you need to prepare a Visual Request Document. The Format of the document is below. You must fill in all fields of the document as required. You should generate the messages as texts on the images. Messages are the most important part of the Visual Request Document. You should write at least 5 messages per messages part. \n ${visualRequestDocument}`
         }),
@@ -174,12 +175,45 @@ const GoogleAds = () => {
           .trim();
         setResponseGemini(cleanResponse);
       }
+      else if (model === "anthropic") {
+        // Anthropic API entegrasyonu
+        const apiResponse = await axios.post(
+          "https://api.anthropic.com/v1/messages",
+          {
+            model: "claude-3-haiku-20240307",
+            messages: [
+              {
+                role: "user",
+                content: JSON.stringify(requestData),
+              },
+            ],
+            max_tokens: 4096,
+            temperature: 1.0,
+            system: systemContent,
+          },
+          {
+            headers: {
+              "x-api-key": `${process.env.REACT_APP_ANTHROPIC_API_KEY}`,
+              "anthropic-version": "2023-06-01",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      
+        const cleanResponse = apiResponse.content[0].text
+          .replace(/[*#]+/g, "")
+          .replace(/\n+/g, "\n")
+          .trim();
+          setResponseAnth(cleanResponse);
+      }
     } catch (error) {
       console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
+
+
   const clearForm = () => {
     setCompanyInfo({ name: "", url: "" });
     setCampaignInfo({
@@ -200,8 +234,6 @@ const GoogleAds = () => {
       searchTerms: 25,
       visualRequest: false,
     });
-    // setResponseGpt("");
-    // setResponseGemini("");
   };
   const clearAll = () => {
     setCompanyInfo({ name: "", url: "" });
@@ -231,11 +263,12 @@ const GoogleAds = () => {
     setImageDemandReq(demands.visualRequest)
   }, [demands.visualRequest]);
 
-  console.log("Response : ", responseGemini);
+  console.log("Response Gemini: ", responseGemini);
+  console.log("Response ChatGpt : ", responseGpt);
   return (
     <div className="container-fluid mt-5" style={{ width: "100%" }}>
       <div>
-        <h1 className="container-sm shadow text-center p-4 mb-4">
+        <h1 className="container-sm shadow-lg text-center p-4 mb-4">
           Google Ads Campaign Planner
         </h1>
       </div>
@@ -531,6 +564,15 @@ const GoogleAds = () => {
                 {" "}
                 Gemini
               </button>
+              {/* <button
+                type="button"
+                className="btn btn-primary m-3"
+                onClick={(e) => handleSubmit(e, "anthropic")} // anthropic için tıklama işlevi
+                disabled={true}
+              >
+                {" "}
+                Anthropic
+              </button> */}
               <button
                 type="button"
                 className="btn btn-danger m-3" // Kırmızı buton rengi
@@ -548,8 +590,9 @@ const GoogleAds = () => {
             </div>
           </form>
         </div>
-        <GptResponse gptResponse={responseGpt}/>
-        <GeminiResponse geminiResponse={responseGemini}/>
+        <GptResponse gptResponse={responseGpt} setResponseGpt={setResponseGpt}/>
+        <GeminiResponse geminiResponse={responseGemini} setResponseGemini={setResponseGemini}/>
+        {/* <Anthropic anthResponse={responseAnth} setResponseAnth={setResponseAnth}/> */}
       </div>
     </div>
   );
