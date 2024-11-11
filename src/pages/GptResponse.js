@@ -125,7 +125,7 @@ const GptResponse = ({ gptResponse, setResponseGpt }) => {
         className="shadow-lg p-4 bg-light rounded flex-fill d-flex flex-column"
         style={{ minHeight: "100%", width: "100%" }}
       >
-        <h4>Response ChatGpt</h4>
+        <h4>Response From ChatGpt</h4>
         <pre style={{ whiteSpace: "pre-wrap", wordWrap: "break-word", flex: 1 }}>
           {gptResponse || "Response from ChatGpt will appear here."}
         </pre>

@@ -31,6 +31,23 @@ const GoogleAds = () => {
   const [responseGemini, setResponseGemini] = useState("Response from Gemini will appear here.");
   const [responseAnth, setResponseAnth] = useState("Response from Anthropic will appear here.");
   const [isLoading, setIsLoading] = useState(false);
+  
+  
+  const campaignTypes = [
+    { label: "Performance Max", value: "Performance Max" },
+    { label: "Search", value: "Search" },
+    { label: "Discovery", value: "Discovery" },
+    { label: "Display", value: "Display" },
+    { label: "Shopping", value: "Shopping" },
+    { label: "App", value: "App" },
+    { label: "Video", value: "Video" },
+  ];
+  const campaignObjectives = [
+    { label: "Sales", value: "Sales" },
+    { label: "Leads", value: "Leads" },
+    { label: "Website Traffic", value: "Website Traffic" },
+    { label: "Awareness and Consideration", value: "Awareness and Consideration" },
+  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -117,15 +134,16 @@ const GoogleAds = () => {
       }
 
       const requestData = {
-        request: `You are preparing Google Ads ads for ${companyInfo.name} company. You will prepare a Google Ads ${campaignInfo.type} campaign called ${campaignInfo.name} Campaign Information is below.`,
-        campaign: campaignInfo,
+        request: `You are preparing a Google Ads advertisement for the ${companyInfo.name} company. You will prepare a Google Ads ${campaignInfo.type} campaign called ${campaignInfo.name}. The Campaign Information is below.`,
+        campaignInfo: `a. Company: ${companyInfo.name}, b. Campaign Name: ${campaignInfo.name}, c. Campaign Type: ${campaignInfo.type}, d. Objectives: ${campaignInfo.goal}, e. Final URL: ${campaignInfo.finalUrl}, f. Target Audience: ${campaignInfo.audience}, g. Focus Points: ${campaignInfo.focusPoints}`,
+        additionalInfo: `Additional Info: ${companyInfo.additionalInfo}`,
         products,
-        textdemands: `To create the texts in the campaign, you need to prepare in English, ${demands.headlines30} up to 30-character Headlines, ${demands.headlines90} up to 90-character Long Headlines, ${demands.descriptions60} up to 60-character Descriptions, ${demands.descriptions90} up to 90-character Descriptions, ${demands.searchTerms} up to 80-character Search Terms, Don't use exclamation marks. The number of characters in the texts to be created for the preparation of Google Ads ads is very important. You should stay true to what is desired.`,
+        textdemands: `To prepare the campaign text assets, please generate the following in English:  ${demands.headlines30} headlines (up to 30 characters each),  ${demands.headlines90} long headlines (up to 90 characters each), ${demands.descriptions60} description (up to 60 characters),  ${demands.descriptions90} descriptions (up to 90 characters each), and ${demands.searchTerms} search terms (up to 80 characters each). Adhere strictly to the character limits for each type of asset. Ensure that the texts are clear, compelling, and thematically relevant, and avoid using exclamation marks.`,
         ...(imageDemandReq && {
           imagedemands: `To create the visual assets in the campaign, you need to prepare a Visual Request Document. The Format of the document is below. You must fill in all fields of the document as required. You should generate the messages as texts on the images. Messages are the most important part of the Visual Request Document. You should write at least 5 messages per messages part. \n ${visualRequestDocument}`
         }),
       };
-
+      console.log("Request Data :", JSON.stringify(requestData) ) 
       if (model === "chatgpt") {
         const apiResponse = await axios.post(
           "https://api.openai.com/v1/chat/completions",
@@ -265,6 +283,10 @@ const GoogleAds = () => {
 
   console.log("Response Gemini: ", responseGemini);
   console.log("Response ChatGpt : ", responseGpt);
+  console.log("Type :", campaignInfo.type)
+  console.log("name :", campaignInfo.name)
+  console.log("info :", campaignInfo)
+
   return (
     <div className="container-fluid mt-5" style={{ width: "100%" }}>
       <div>
@@ -307,27 +329,55 @@ const GoogleAds = () => {
               onChange={handleCampaignChange}
               required
             />
-            <input
+            <select
               className="form-control mb-3"
               name="type"
-              placeholder="Campaign Type"
               value={campaignInfo.type}
               onChange={handleCampaignChange}
               required
-            />
+            >
+              <option value="" disabled>
+                Select Campaign Type
+              </option>
+              {campaignTypes.map(function (type) {
+                console.log(type.value)
+                return (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              )})}
+            </select>
+            <select
+              className="form-control mb-3"
+              name="goal"
+              value={campaignInfo.goal}
+              onChange={handleCampaignChange}
+              required
+            >
+              <option value="" disabled>
+                Select Campaign Objective
+              </option>
+              {campaignObjectives.map(function (obj) {
+                console.log(obj.value)
+                return (
+                <option key={obj.value} value={obj.value}>
+                  {obj.label}
+                </option>
+              )})}
+            </select>
+            {/* <input
+              className="form-control mb-3"
+              name="goal"
+              placeholder="Campaign Goal"
+              value={campaignInfo.goal}
+              onChange={handleCampaignChange}
+              required
+            /> */}
             <input
               className="form-control mb-3"
               name="finalUrl"
               placeholder="Final URL"
               value={campaignInfo.finalUrl}
-              onChange={handleCampaignChange}
-              required
-            />
-            <input
-              className="form-control mb-3"
-              name="goal"
-              placeholder="Campaign Goal"
-              value={campaignInfo.goal}
               onChange={handleCampaignChange}
               required
             />
@@ -420,7 +470,7 @@ const GoogleAds = () => {
               <label className="col-form-label col-auto">
                 30 Character Headlines:
               </label>
-              <div className="col-auto">
+              <div className="col-sm">
                 <input
                   type="number"
                   name="headlines30"
@@ -445,7 +495,7 @@ const GoogleAds = () => {
               <label className="col-form-label col-auto">
                 90 Character Long Headlines:
               </label>
-              <div className="col-auto">
+              <div className="col-sm">
                 <input
                   type="number"
                   name="headlines90"
@@ -470,7 +520,7 @@ const GoogleAds = () => {
               <label className="col-form-label col-auto">
                 60 Character Descriptions:
               </label>
-              <div className="col-auto">
+              <div className="col-sm">
                 <input
                   type="number"
                   name="descriptions60"
@@ -495,7 +545,7 @@ const GoogleAds = () => {
               <label className="col-form-label col-auto">
                 90 Character Descriptions:
               </label>
-              <div className="col-auto">
+              <div className="col-sm">
                 <input
                   type="number"
                   name="descriptions90"
@@ -520,7 +570,7 @@ const GoogleAds = () => {
               <label className="col-form-label col-auto">
                 Number of Search Terms:
               </label>
-              <div className="col-auto">
+              <div className="col-sm">
                 <input
                   type="number"
                   name="searchTerms"
@@ -590,8 +640,14 @@ const GoogleAds = () => {
             </div>
           </form>
         </div>
-        <GptResponse gptResponse={responseGpt} setResponseGpt={setResponseGpt}/>
-        <GeminiResponse geminiResponse={responseGemini} setResponseGemini={setResponseGemini}/>
+        <GptResponse
+          gptResponse={responseGpt}
+          setResponseGpt={setResponseGpt}
+        />
+        <GeminiResponse
+          geminiResponse={responseGemini}
+          setResponseGemini={setResponseGemini}
+        />
         {/* <Anthropic anthResponse={responseAnth} setResponseAnth={setResponseAnth}/> */}
       </div>
     </div>
