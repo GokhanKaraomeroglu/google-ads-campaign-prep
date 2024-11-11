@@ -147,7 +147,7 @@ const GptResponse = ({ gptResponse, setResponseGpt }) => {
           </button>
           <button
             type="button"
-            className="btn btn-secondary m-3"
+            className="btn btn-primary m-3"
             onClick={saveAsWord}
           >
             Save as Word

@@ -34,7 +34,7 @@ const GeminiResponse = ({ geminiResponse, setResponseGemini }) => {
       align: "left",
     });
     
-    doc.save("ChatGpt_Response.pdf");
+    doc.save("Gemini_Response.pdf");
   };
 
   const saveAsWord = () => {
@@ -50,7 +50,7 @@ const GeminiResponse = ({ geminiResponse, setResponseGemini }) => {
     const content = header + `<p>${(geminiResponse || "Can't get the response. Try again please.").replace(/\n/g, "</p><p>")}</p>` + footer;
     const blob = new Blob([content], { type: "application/msword" });
 
-    saveAs(blob, "ChatGpt_Response.doc");
+    saveAs(blob, "Gemini_Response.doc");
   };
 
   return (
