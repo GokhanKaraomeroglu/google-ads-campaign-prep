@@ -65,18 +65,31 @@ const SocialAds = () => {
   const handleSubmit = async (e, model) => {
     e.preventDefault();
     try {
-    const systemContent =
-      "You are a Social Media & Facebook Ad Copy Expert, knowledgeable about the different types of Social Media campaigns and how to create the necessary content for them. You possess the expertise to select social media marketing strategies effectively and generate creative solutions using relevant campaign models. You can produce suitable written assets and creatives and videos for advertising campaigns. You are a friendly and helpful assistant with a strong command of the English language and literature.";
+      const systemContent =
+        "You are a Social Media & Facebook Ad Copy Expert, knowledgeable about the different types of Social Media campaigns and how to create the necessary content for them. You possess the expertise to select social media marketing strategies effectively and generate creative solutions using relevant campaign models. You can produce suitable written assets and creatives and videos for advertising campaigns. You are a friendly and helpful assistant with a strong command of the English language and literature.";
 
-   
-    const requestData = {
-      request: `  ${companyInfo.name} company sells products below. I’m running a ${campaignInfo.type} campaign targeting ${campaignInfo.audience}. My brand voice is ${campaignInfo.adjectives}. Campaign Information is below`,
-      campaign: campaignInfo,
-      products,
-      textdemands: `Write the copy for ${demands.adcopies} Facebook ad variations for my target audience using this copy template ${demands.headlines} 40-character Headlines,  ${demands.descriptions} 30-character Descriptions, ${demands.primarytext} 125 to 300 character Primary text `,
+      const requestData = {
+        request: `  ${companyInfo.name} company sells products below. I’m running a ${campaignInfo.type} campaign targeting ${campaignInfo.audience}. My brand voice is ${campaignInfo.adjectives}. Campaign Information is below`,
+        campaign: campaignInfo,
+        productsInfo: `Information about the products to be used in the campaign:
+        ${products
+          .map(
+            (product, index) =>
+              `${index + 1}. Name: ${product.name || "N/A"}, 
+          Data: ${product.data || "N/A"}, 
+          URL: ${product.url || "N/A"}`
+          )
+          .join("\n")}`,
+        textdemands: `Write the copy for ${demands.adcopies} Facebook ad variations for my target audience using this copy template ${demands.headlines} 40-character Headlines,  ${demands.descriptions} 30-character Descriptions, ${demands.primarytext} 125 to 300 character Primary text `,
       };
-
-    // ChatGPT API ayarı
+      const plainTextRequestData = `
+  ${requestData.request}
+  ${requestData.campaign}
+  ${requestData.productsInfo}
+  ${requestData.textdemands}
+`.trim();
+        console.log("Plain Text Request Data:", plainTextRequestData);
+      // ChatGPT API ayarı
 
       if (model === "chatgpt") {
         const apiResponse = await axios.post(
@@ -85,7 +98,7 @@ const SocialAds = () => {
             model: "gpt-4o-mini",
             messages: [
               { role: "system", content: systemContent },
-              { role: "user", content: JSON.stringify(requestData) },
+              { role: "user", content: plainTextRequestData },
             ],
             temperature: 1.0,
             max_tokens: 4096,
@@ -107,21 +120,24 @@ const SocialAds = () => {
           .trim();
         setResponseGpt(cleanResponse);
       } else if (model === "gemini") {
-        const {GoogleGenerativeAI} = require("@google/generative-ai");
+        const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-        const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
+        const genAI = new GoogleGenerativeAI(
+          process.env.REACT_APP_GEMINI_API_KEY
+        );
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const prompt = JSON.stringify(requestData);
 
         const result = await model.generateContent(prompt);
-        console.log(result.response.text());
+        // console.log(result.response.text());
 
-        const cleanResponse = result.response.text()
+        const cleanResponse = result.response
+          .text()
           .replace(/[*#]+/g, "")
           .replace(/\n+/g, "\n")
           .trim();
-          setResponseGemini(cleanResponse);
+        setResponseGemini(cleanResponse);
       }
     } catch (error) {
       console.error(error);
@@ -175,17 +191,20 @@ const SocialAds = () => {
     setResponseGpt("");
     setResponseGemini("");
   };
-  console.log("Response : ", responseGemini);
+  // console.log("Response : ", responseGemini);
   return (
-<div className="container-fluid mt-5" style={{ width: "100%" }}>
+    <div className="container-fluid mt-5" style={{ width: "100%" }}>
       <div>
         <h1 className="container-sm shadow-lg text-center p-4 mb-4">
-        Social Media Campaign Planner
+          Social Media Campaign Planner
         </h1>
       </div>
       <div className="row mt-5">
         <div className="col-md-4">
-        <form onSubmit={handleSubmit} className="shadow-lg p-4 bg-light rounded">
+          <form
+            onSubmit={handleSubmit}
+            className="shadow-lg p-4 bg-light rounded"
+          >
             {/* Part-1: Company Info */}
             <h4 className="mb-3">Company Info</h4>
             <input
@@ -375,8 +394,14 @@ const SocialAds = () => {
             </div>
           </form>
         </div>
-        <GptResponse gptResponse={responseGpt} setResponseGpt={setResponseGpt}/>
-        <GeminiResponse geminiResponse={responseGemini} setResponseGemini={setResponseGemini}/>
+        <GptResponse
+          gptResponse={responseGpt}
+          setResponseGpt={setResponseGpt}
+        />
+        <GeminiResponse
+          geminiResponse={responseGemini}
+          setResponseGemini={setResponseGemini}
+        />
       </div>
     </div>
   );

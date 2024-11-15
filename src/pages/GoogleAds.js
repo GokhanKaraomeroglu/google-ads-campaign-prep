@@ -16,6 +16,7 @@ const GoogleAds = () => {
     audience: "",
     focusPoints: "",
     additionalInfo: "",
+    textlanguage: "",
   });
   const [products, setProducts] = useState([{ name: "", data: "", url: "" }]);
   const [demands, setDemands] = useState({
@@ -26,13 +27,18 @@ const GoogleAds = () => {
     searchTerms: 25,
     visualRequest: false,
   });
-  const [imageDemandReq, setImageDemandReq] = useState(false)
-  const [responseGpt, setResponseGpt] = useState("Response from ChatGpt will appear here.");
-  const [responseGemini, setResponseGemini] = useState("Response from Gemini will appear here.");
-  const [responseAnth, setResponseAnth] = useState("Response from Anthropic will appear here.");
+  const [imageDemandReq, setImageDemandReq] = useState(false);
+  const [responseGpt, setResponseGpt] = useState(
+    "Response from ChatGpt will appear here."
+  );
+  const [responseGemini, setResponseGemini] = useState(
+    "Response from Gemini will appear here."
+  );
+  const [responseAnth, setResponseAnth] = useState(
+    "Response from Anthropic will appear here."
+  );
   const [isLoading, setIsLoading] = useState(false);
-  
-  
+
   const campaignTypes = [
     { label: "Performance Max", value: "Performance Max" },
     { label: "Search", value: "Search" },
@@ -46,7 +52,16 @@ const GoogleAds = () => {
     { label: "Sales", value: "Sales" },
     { label: "Leads", value: "Leads" },
     { label: "Website Traffic", value: "Website Traffic" },
-    { label: "Awareness and Consideration", value: "Awareness and Consideration" },
+    {
+      label: "Awareness and Consideration",
+      value: "Awareness and Consideration",
+    },
+  ];
+  const textLang = [
+    { label: "English", value: "English" },
+    { label: "French", value: "French" },
+    { label: "German", value: "German" },
+    { label: "Turkish", value: "Turkish" },
   ];
 
   const handleInputChange = (e) => {
@@ -135,15 +150,39 @@ const GoogleAds = () => {
 
       const requestData = {
         request: `You are preparing a Google Ads advertisement for the ${companyInfo.name} company. You will prepare a Google Ads ${campaignInfo.type} campaign called ${campaignInfo.name}. The Campaign Information is below.`,
-        campaignInfo: `a. Company: ${companyInfo.name}, b. Campaign Name: ${campaignInfo.name}, c. Campaign Type: ${campaignInfo.type}, d. Objectives: ${campaignInfo.goal}, e. Final URL: ${campaignInfo.finalUrl}, f. Target Audience: ${campaignInfo.audience}, g. Focus Points: ${campaignInfo.focusPoints}`,
+        campaignInfo: `a. Company: ${companyInfo.name}, b. Campaign Name: ${campaignInfo.name}, c. Campaign Type: ${campaignInfo.type}, d. Objectives: ${campaignInfo.goal}, e. Final URL: ${campaignInfo.finalUrl}, f. Target Audience: ${campaignInfo.audience}, g. Focus Points: ${campaignInfo.focusPoints}, g. Campaign Language: ${campaignInfo.textlanguage}`,
         additionalInfo: `Additional Info: ${companyInfo.additionalInfo}`,
-        products,
-        textdemands: `To prepare the campaign text assets, please generate the following in English:  ${demands.headlines30} headlines (up to 30 characters each),  ${demands.headlines90} long headlines (up to 90 characters each), ${demands.descriptions60} description (up to 60 characters),  ${demands.descriptions90} descriptions (up to 90 characters each), and ${demands.searchTerms} search terms (up to 80 characters each). Adhere strictly to the character limits for each type of asset. Ensure that the texts are clear, compelling, and thematically relevant, and avoid using exclamation marks.`,
+        productsInfo: `Information about the products to be used in the campaign:
+        ${products.map((product, index) =>
+          `${index + 1}. Name: ${product.name || "N/A"}, 
+          Data: ${product.data || "N/A"}, 
+          URL: ${product.url || "N/A"}`)
+          .join("\n")}`,
+        textdemands: `To prepare the campaign text assets, please generate the following in ${
+          campaignInfo.textlanguage ? campaignInfo.textlanguage : "English"
+        }:  ${demands.headlines30} headlines (up to 30 characters each),  ${
+          demands.headlines90
+        } long headlines (up to 90 characters each), ${
+          demands.descriptions60
+        } description (up to 60 characters),  ${
+          demands.descriptions90
+        } descriptions (up to 90 characters each), and ${
+          demands.searchTerms
+        } search terms (up to 80 characters each). Adhere strictly to the character limits for each type of asset. Ensure that the texts are clear, compelling, and thematically relevant, and avoid using exclamation marks.`,
         ...(imageDemandReq && {
-          imagedemands: `To create the visual assets in the campaign, you need to prepare a Visual Request Document. The Format of the document is below. You must fill in all fields of the document as required. You should generate the messages as texts on the images. Messages are the most important part of the Visual Request Document. You should write at least 5 messages per messages part. \n ${visualRequestDocument}`
+          imagedemands: `To create the visual assets in the campaign, you need to prepare a Visual Request Document. The Format of the document is below. You must fill in all fields of the document as required. You should generate the messages as texts on the images. Messages are the most important part of the Visual Request Document. You should write at least 5 messages per messages part. \n ${visualRequestDocument}`,
         }),
       };
-      console.log("Request Data :", JSON.stringify(requestData) ) 
+      // console.log("Request Data :", JSON.stringify(requestData));
+      const plainTextRequestData = `
+  ${requestData.request}
+  ${requestData.campaignInfo}
+  ${requestData.additionalInfo}
+  ${requestData.productsInfo || ""}
+  ${requestData.textdemands}
+  ${requestData.imagedemands || ""}
+`.trim();
+      console.log("Plain Text Request Data:", plainTextRequestData);
       if (model === "chatgpt") {
         const apiResponse = await axios.post(
           "https://api.openai.com/v1/chat/completions",
@@ -151,7 +190,7 @@ const GoogleAds = () => {
             model: "gpt-4o-mini",
             messages: [
               { role: "system", content: systemContent },
-              { role: "user", content: JSON.stringify(requestData) },
+              { role: "user", content: plainTextRequestData },
             ],
             temperature: 1.0,
             max_tokens: 4096,
@@ -184,7 +223,7 @@ const GoogleAds = () => {
         const prompt = JSON.stringify(requestData);
 
         const result = await model.generateContent(prompt);
-        console.log(result.response.text());
+        // console.log(result.response.text());
 
         const cleanResponse = result.response
           .text()
@@ -192,8 +231,7 @@ const GoogleAds = () => {
           .replace(/\n+/g, "\n")
           .trim();
         setResponseGemini(cleanResponse);
-      }
-      else if (model === "anthropic") {
+      } else if (model === "anthropic") {
         // Anthropic API entegrasyonu
         const apiResponse = await axios.post(
           "https://api.anthropic.com/v1/messages",
@@ -217,12 +255,12 @@ const GoogleAds = () => {
             },
           }
         );
-      
+
         const cleanResponse = apiResponse.content[0].text
           .replace(/[*#]+/g, "")
           .replace(/\n+/g, "\n")
           .trim();
-          setResponseAnth(cleanResponse);
+        setResponseAnth(cleanResponse);
       }
     } catch (error) {
       console.error(error);
@@ -230,7 +268,6 @@ const GoogleAds = () => {
       setIsLoading(false);
     }
   };
-
 
   const clearForm = () => {
     setCompanyInfo({ name: "", url: "" });
@@ -242,6 +279,7 @@ const GoogleAds = () => {
       audience: "",
       focusPoints: "",
       additionalInfo: "",
+      textlanguage: "",
     });
     setProducts([{ name: "", data: "", url: "" }]);
     setDemands({
@@ -263,6 +301,7 @@ const GoogleAds = () => {
       audience: "",
       focusPoints: "",
       additionalInfo: "",
+      textlanguage: "",
     });
     setProducts([{ name: "", data: "", url: "" }]);
     setDemands({
@@ -278,14 +317,22 @@ const GoogleAds = () => {
   };
 
   useEffect(() => {
-    setImageDemandReq(demands.visualRequest)
+    setImageDemandReq(demands.visualRequest);
   }, [demands.visualRequest]);
 
-  console.log("Response Gemini: ", responseGemini);
-  console.log("Response ChatGpt : ", responseGpt);
-  console.log("Type :", campaignInfo.type)
-  console.log("name :", campaignInfo.name)
-  console.log("info :", campaignInfo)
+  // console.log("Response Gemini: ", responseGemini);
+  // console.log("Response ChatGpt : ", responseGpt);
+  // console.log("Type :", campaignInfo.type);
+  // console.log("name :", campaignInfo.name);
+  // console.log("lang :", campaignInfo.textlanguage);
+  console.log(
+    "Company Info :",
+    companyInfo,
+    "\nCampaign Info:",
+    campaignInfo,
+    "\nDemands:",
+    demands
+  );
 
   return (
     <div className="container-fluid mt-5" style={{ width: "100%" }}>
@@ -340,12 +387,13 @@ const GoogleAds = () => {
                 Select Campaign Type
               </option>
               {campaignTypes.map(function (type) {
-                console.log(type.value)
+                // console.log(type.value);
                 return (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              )})}
+                  <option key={type.value} value={type.value}>
+                    {type.label}
+                  </option>
+                );
+              })}
             </select>
             <select
               className="form-control mb-3"
@@ -358,21 +406,33 @@ const GoogleAds = () => {
                 Select Campaign Objective
               </option>
               {campaignObjectives.map(function (obj) {
-                console.log(obj.value)
+                // console.log(obj.value);
                 return (
-                <option key={obj.value} value={obj.value}>
-                  {obj.label}
-                </option>
-              )})}
+                  <option key={obj.value} value={obj.value}>
+                    {obj.label}
+                  </option>
+                );
+              })}
             </select>
-            {/* <input
+            <select
               className="form-control mb-3"
-              name="goal"
-              placeholder="Campaign Goal"
-              value={campaignInfo.goal}
+              name="textlanguage"
+              value={campaignInfo.textlanguage}
               onChange={handleCampaignChange}
               required
-            /> */}
+            >
+              <option value="" disabled>
+                Select Campaign Language
+              </option>
+              {textLang.map(function (lang) {
+                // console.log(lang.value);
+                return (
+                  <option key={lang.value} value={lang.value}>
+                    {lang.label}
+                  </option>
+                );
+              })}
+            </select>
             <input
               className="form-control mb-3"
               name="finalUrl"
