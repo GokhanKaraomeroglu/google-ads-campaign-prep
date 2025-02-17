@@ -71,7 +71,7 @@ const GptResponse = ({ gptResponse, setResponseGpt }) => {
   const clearResponse = () => {
     setResponseGpt("");
   };
-
+console.log("gptResponse: ", gptResponse);
   const saveAsPdf = () => {
     const doc = new jsPDF({
       unit: "cm",

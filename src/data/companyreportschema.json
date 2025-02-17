@@ -1,0 +1,271 @@
+{
+  "name": "company_report_schema",
+  "description": "Schema for a company report that includes information about the company, advertising campaign goals, target audience, budget, keywords, call to actions, competitor analysis, visual recommendations, and conclusion.",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "company": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Company name"
+          },
+          "based_in": {
+            "type": "string",
+            "description": "Company location"
+          },
+          "website": {
+            "type": "string",
+            "description": "Company website URL"
+          }
+        },
+        "required": ["name", "based_in", "website"]
+      },
+      "goals": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "description": "Advertising campaign objective to achieve the company's purpose",
+          "additionalProperties": false,
+          "properties": {
+            "goals": {
+              "type": "string",
+              "description": "Advertising campaign objective to achieve the company's purpose"
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of the objective"
+            }
+          },
+        "required": ["goals", "description"]  
+        },
+        "description": "Advertising campaign objectives (e.g., phone call, website traffic, lead, sales, awareness, local store visit, etc.) to achieve the company's purpose"
+      },
+      "target_audience": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "The detailed geographic location of the target audience and its connection to the company's location."
+          },
+          "occupation": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Target audience's occupations and their relevance."
+          },
+          "age_range": {
+            "type": "string",
+            "description": "Target age range"
+          },
+          "gender_distribution": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "male": {
+                "type": "number",
+                "description": "Percentage of male audience"
+              },
+              "female": {
+                "type": "number",
+                "description": "Percentage of female audience"
+              }
+            },
+            "required": ["male", "female"]
+          },
+          "interests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Target audience's interests and their relationship with the company's products or services"
+          }
+        },
+        "required": [
+          "location",
+          "occupation",
+          "age_range",
+          "gender_distribution",
+          "interests"
+        ]
+      },
+      "budget": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "conversion_rate": {
+            "type": "string",
+            "description": "Average conversion rate in Google Ads and explanation of the conversion rate"
+          },
+          "cpc_range": {
+            "type": "string",
+            "description": "Estimated cost per click range and explanation of the cost per click range"
+          },
+          "initial_budget": {
+            "type": "string",
+            "description": "Recommended monthly budget for the campaigns and explanation of the budget allocation"
+          },
+          "convertion_rate_industry_benchmark": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": ["title", "description"]
+            },
+            "description": "Approximate conversion rates based on industry benchmarks"
+          }
+        },
+        "required": ["conversion_rate", "cpc_range", "initial_budget", "convertion_rate_industry_benchmark"]
+      },
+      "budget_table": {
+        "title": "Monthly Budget Data",
+        "description": "Data for at least 3 different monthly budget scenarios.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "monthlyBudget": {
+              "type": "integer",
+              "description": "Monthly budget in local currency (eg. : $1.5, 200.00TRY, etc.)"
+            },
+            "dailyBudget": {
+              "type": "integer",
+              "description": "Daily budget in local currency (eg. : $1.5, 200.00TRY, etc.)"
+            },
+            "estimatedCPC": {
+              "type": "string",
+              "description": "Estimated cost per click in local currency (eg. : $1.5, 200.00TRY, etc.)"
+            },
+            "estimatedClicksPerDay": {
+              "type": "string",
+              "description": "Estimated clicks per day"
+            },
+            "estimatedLeadsPerMonth": {
+              "type": "string",
+              "description": "Estimated leads per month (eg. : 4.4% conversion rate)"
+            },
+            "estimatedLocalStoreVisitsPerMonth": {
+              "type": "string",
+              "description": "Estimated local store visits per month (eg. : 3% conversion rate)"
+            },
+            "estimatedPhoneCallsPerMonth": {
+              "type": "string",
+              "description": "Estimated phone calls per month (eg. : 6% conversion rate)"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "monthlyBudget",
+            "dailyBudget",
+            "estimatedCPC",
+            "estimatedClicksPerDay",
+            "estimatedLeadsPerMonth",
+            "estimatedLocalStoreVisitsPerMonth",
+            "estimatedPhoneCallsPerMonth"
+          ]
+        }
+      },
+      "ads_strategy": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "strategy": {
+            "type": "string",
+            "description": "Determine detailed google ads strategy based on the company's goals, target audience, and budget. Write which compaigns will be used for each company goal."
+            },
+          "types_of_campaigns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "campaign_type": {
+                  "type": "string",
+                  "description": "Type of campaign (e.g., search, display, video, shopping, app promotion, etc.)"
+                  },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the campaign type and its relevance to the company's goals"
+                  }
+                },
+              "required": ["campaign_type", "description"]
+              },
+            "description": "Types of campaigns (e.g., search, display, video, shopping, app promotion, etc.) to achieve the company's goals"
+            }
+          },
+        "required": ["strategy", "types_of_campaigns"]
+      },
+      "keywords": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Relevant keywords for the campaign"
+      },
+      "longtailkeywords": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Relevant long tail keywords for the campaign. It should include specific phrases that are more likely to convert into leads or sales."
+      },
+      "call_to_actions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Relevant call to action phrases used in google ads. They should contribute to the effectiveness of campaigns by clearly state the next steps, help to filter and direct user engagement towards meaningful interactions."
+      },
+      "competitor_analysis": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Competitor name"
+            },
+            "strategy": {
+              "type": "string",
+              "description": "The competitors detailed marketing and advertising strategy"
+            }
+          },
+          "additionalProperties": false,
+          "required": ["name", "strategy"]
+        },
+        "description": "List of at least 3 real competitors, their advertising strategies, their strengths and weaknesses and their website URLs."
+      },
+      "conclusion": {
+        "type": "string",
+        "description": "A detailed conclusion of the report. It should mention the proposed budget, types of campaigns, and strategy on how to stand out among competitors."
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "company",
+      "goals",
+      "target_audience",
+      "budget",
+      "budget_table",
+      "ads_strategy",
+      "keywords",
+      "longtailkeywords",
+      "call_to_actions",
+      "competitor_analysis",
+      "conclusion"
+    ]
+  }
+}

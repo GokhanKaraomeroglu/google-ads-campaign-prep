@@ -17,6 +17,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AppNavbar from './components/Navbar';
 import Footer from './components/Footer';
 import GoogleAds from './pages/GoogleAds';
+import CompanyReport from './pages/CompanyReport';
 import SEO from './pages/SEO';
 import SocialAds from './pages/SocialAds';
 // import CampaignForm from './components/CampaignForm';
@@ -30,6 +31,7 @@ function App() {
           <Routes>
             <Route path="/" element={<GoogleAds />} />
             <Route path="/google-ads" element={<GoogleAds />} />
+            <Route path="/company-report" element={<CompanyReport />} />
             <Route path="/seo" element={<SEO />} />
             <Route path="/social-ads" element={<SocialAds />} />
           </Routes>

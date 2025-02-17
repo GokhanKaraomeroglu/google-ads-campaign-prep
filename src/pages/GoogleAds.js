@@ -102,7 +102,7 @@ const GoogleAds = () => {
 
     try {
       const systemContent =
-        "You are an expert in Google Ads, knowledgeable about the different types of Google Ads campaigns and how to create the necessary content for them. You possess the expertise to select keywords effectively and generate creative solutions using relevant keywords for campaigns. You can produce suitable written assets and visuals for advertising campaigns. You are a friendly and helpful assistant with a strong command of the English language and literature.";
+        `You are an expert in Google Ads, knowledgeable about the different types of Google Ads campaigns and how to create the necessary content for them. You possess the expertise to select keywords effectively and generate creative solutions using relevant keywords for campaigns. You can produce suitable written assets and visuals for advertising campaigns. You are a friendly and helpful assistant with a strong command of the ${campaignInfo.textlanguage} language and literature.`;
 
       // Visual Request Document formatı
       let visualRequestDocument = "";
@@ -151,7 +151,7 @@ const GoogleAds = () => {
       const requestData = {
         request: `You are preparing a Google Ads advertisement for the ${companyInfo.name} company. You will prepare a Google Ads ${campaignInfo.type} campaign called ${campaignInfo.name}. The Campaign Information is below.`,
         campaignInfo: `a. Company: ${companyInfo.name}, b. Campaign Name: ${campaignInfo.name}, c. Campaign Type: ${campaignInfo.type}, d. Objectives: ${campaignInfo.goal}, e. Final URL: ${campaignInfo.finalUrl}, f. Target Audience: ${campaignInfo.audience}, g. Focus Points: ${campaignInfo.focusPoints}, g. Campaign Language: ${campaignInfo.textlanguage}`,
-        additionalInfo: `Additional Info: ${companyInfo.additionalInfo}`,
+        additionalInfo: `Additional Info: ${campaignInfo.additionalInfo}`,
         productsInfo: `Information about the products to be used in the campaign:
         ${products.map((product, index) =>
           `${index + 1}. Name: ${product.name || "N/A"}, 
@@ -220,7 +220,10 @@ const GoogleAds = () => {
         );
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const prompt = JSON.stringify(requestData);
+        const system = JSON.stringify(systemContent);
+        const request = JSON.stringify(plainTextRequestData);
+        const prompt = ` ${system} \n ${request}`;
+        console.log("Prompt: ", prompt);
 
         const result = await model.generateContent(prompt);
         // console.log(result.response.text());

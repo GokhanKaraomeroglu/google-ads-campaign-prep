@@ -37,6 +37,9 @@ const AppNavbar = () => {
               <Nav.Link as={Link} to="/google-ads">
                 Google Ads
               </Nav.Link>
+              <Nav.Link as={Link} to="/company-report">
+              Google Ads Plan
+              </Nav.Link>
               <Nav.Link as={Link} to="/social-ads">
                 Social Ads
               </Nav.Link>
