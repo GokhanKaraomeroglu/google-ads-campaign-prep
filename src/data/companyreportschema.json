@@ -184,7 +184,7 @@
         "properties": {
           "strategy": {
             "type": "string",
-            "description": "Determine detailed google ads strategy based on the company's goals, target audience, and budget. Write which compaigns will be used for each company goal."
+            "description": "Determine comprehensive google ads strategy based on the company's goals, target audience, and budget. Write which compaigns will be used for each company goal."
             },
           "types_of_campaigns": {
             "type": "array",
@@ -194,18 +194,19 @@
               "properties": {
                 "campaign_type": {
                   "type": "string",
-                  "description": "Type of campaign (e.g., search, display, video, shopping, app promotion, etc.)"
+                  "description": "Type of campaign (e.g., performance max campaign, demand gen campaign, search campaign, display campaign, video campaign, shopping campaign, app promotion campaign, etc.)"
                   },
                 "description": {
                   "type": "string",
-                  "description": "Description of the campaign type and its relevance to the company's goals"
+                  "description": "Detailed description of the campaign type and its relevance to the company's goals"
                   }
                 },
               "required": ["campaign_type", "description"]
               },
-            "description": "Types of campaigns (e.g., search, display, video, shopping, app promotion, etc.) to achieve the company's goals"
+            "description": "Types of campaigns (e.g., performance max campaign, demand gen campaign, search campaign, display campaign, video campaign, shopping campaign, app promotion campaign, etc.) to achieve the company's goals"
             }
           },
+        "description": "Comprehensive google ads strategy based on the company's goals, target audience, and budget. It should include the types of campaigns to be used for each company goal.",
         "required": ["strategy", "types_of_campaigns"]
       },
       "keywords": {
@@ -246,7 +247,7 @@
           "additionalProperties": false,
           "required": ["name", "strategy"]
         },
-        "description": "List of at least 3 real competitors, their advertising strategies, their strengths and weaknesses and their website URLs."
+        "description": "List of at least 3 real competitors, their advertising strategies, strengths and weaknesses and website URLs."
       },
       "conclusion": {
         "type": "string",

@@ -8,6 +8,8 @@ import {
   TextRun,
   HeadingLevel,
   WidthType,
+  SectionType,
+  AlignmentType
 } from "docx";
 import { saveAs } from "file-saver";
 
@@ -19,7 +21,8 @@ export const JsonToWord = (gptResponse) => {
             new Paragraph({
               text: `${gptResponse.company.name} Google Ads Plan`,
               heading: HeadingLevel.HEADING_1,
-              spacing: { after: 200 }
+              spacing: { after: 100 },
+              alignment: AlignmentType.CENTER 
             })
           ]
         }]
@@ -181,7 +184,7 @@ if (gptResponse.budget) {
   if (gptResponse.budget_table && gptResponse.budget_table.length > 0) {
     children.push(
       new Paragraph({
-        text: "Estimared Budget",
+        text: "Estimated Budget",
         heading: HeadingLevel.HEADING_2,
         spacing: { before: 200, after: 100 }
       }),
@@ -283,7 +286,7 @@ if (gptResponse.ads_strategy) {
     }),
     new Paragraph({
       children: [
-        new TextRun({ text: "Conversion Rate: ", bold: true }),
+        new TextRun({ text: "Google Ads Strategy: ", bold: true }),
         new TextRun(strategy)
       ],
       spacing: { before: 100 }
@@ -360,7 +363,7 @@ if (gptResponse.ads_strategy) {
   }
   // Competitor Analysis Section
 
-  if (gptResponse.competitor_analysis && gptResponse.competitor_analysis > 0) {
+  if (gptResponse.competitor_analysis && gptResponse.competitor_analysis.length > 0) {
     children.push(
       new Paragraph({
         text: "9. Competitor Analysis",
@@ -393,11 +396,13 @@ if (gptResponse.ads_strategy) {
   }
 
 // Tüm içeriği tek bir bölümde topluyoruz
-  // doc.addSection({
-  //   properties: {},
-  //   children: children
-  // });
-doc.addSection({ children });
+doc.addSection({
+  properties: {
+    type: SectionType.CONTINUOUS
+  },
+  children: children
+});
+
 
   return Packer.toBlob(doc).then((blob) => {
     saveAs(blob, "Google_Ads_Plan.docx");

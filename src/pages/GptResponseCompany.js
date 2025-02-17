@@ -105,7 +105,11 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
 
   const renderBudgetTable = () => {
     if (!gptResponse || !gptResponse.budget_table) {
-      return "No budget table information available.";
+      return (
+        <div>
+          <p>No estimated budget table information available.</p>
+        </div>
+      );
     }
   
     return (
