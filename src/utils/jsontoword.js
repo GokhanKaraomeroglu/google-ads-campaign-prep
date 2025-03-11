@@ -373,7 +373,7 @@ if (gptResponse.ads_strategy) {
       ...gptResponse.competitor_analysis.map(
         (competitor) =>
           new Paragraph({
-            text: `• ${competitor.name}, ${competitor.strategy}.`,
+            text: `• ${competitor.name}, ${competitor.websiteURL}, ${competitor.strategy}.`,
             spacing: { before: 100 },
           })
       )

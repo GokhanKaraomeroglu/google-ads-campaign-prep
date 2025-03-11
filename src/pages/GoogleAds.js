@@ -37,6 +37,7 @@ const GoogleAds = () => {
   const [responseAnth, setResponseAnth] = useState(
     "Response from Anthropic will appear here."
   );
+
   const [isLoading, setIsLoading] = useState(false);
 
   const campaignTypes = [
@@ -218,7 +219,7 @@ const GoogleAds = () => {
         const genAI = new GoogleGenerativeAI(
           process.env.REACT_APP_GEMINI_API_KEY
         );
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
         const system = JSON.stringify(systemContent);
         const request = JSON.stringify(plainTextRequestData);

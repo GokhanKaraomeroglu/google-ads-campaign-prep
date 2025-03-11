@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import schema from "../data/companyreportschema.json";
 
 import GptResponseCompany from "./GptResponseCompany.js";
-// import GeminiResponse from "./GeminiResponse.js";
+import GeminiResponseCompany from "./GeminiResponseCompany.js";
 
 console.log("SCHEMA: ", schema);
 const CompanyReport = () => {
@@ -14,16 +14,13 @@ const CompanyReport = () => {
     goal: [],
     focusPoints: "",
     additionalInfo: "",
+    competitors: "",
     textlanguage: "",
     currency: "",
   });
 
-  const [responseGpt, setResponseGpt] = useState(
-    "Response from ChatGpt will appear here."
-  );
-  const [responseGemini, setResponseGemini] = useState(
-    "Response from Gemini will appear here."
-  );
+  const [responseGpt, setResponseGpt] = useState();
+  const [responseGemini, setResponseGemini] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
   const campaignObjectives = [
@@ -77,12 +74,14 @@ const CompanyReport = () => {
         request: `You are preparing a Company Report for the ${companyInfo.name} company. The report should include potential keywords, ad copy suggestions, and a proposed budget for a Google Ads campaign. The Campaign Information is below.`,
         companyInfo: `a. Company: ${companyInfo.name}, b. URL: ${companyInfo.url}, c. Objectives: ${companyInfo.goal}, d. Focus Points: ${companyInfo.focusPoints}, e. Budget Currency: ${companyInfo.currency}`,
         additionalInfo: `Additional Info: ${companyInfo.additionalInfo}`,
+        competitors: `Competitors: ${companyInfo.competitors} In addition: Do not hallucinate competitors`,
         reportLanguage: `Report Language:  ${companyInfo.textlanguage}`,
       };
   const plainTextRequestData = `
   ${requestData.request}
   ${requestData.companyInfo}
   ${requestData.additionalInfo}
+  ${requestData.competitors}
   ${requestData.reportLanguage}
 `.trim();
       console.log("Plain Text Request Data:", plainTextRequestData);
@@ -121,21 +120,23 @@ const CompanyReport = () => {
         const genAI = new GoogleGenerativeAI(
           process.env.REACT_APP_GEMINI_API_KEY
         );
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
         const system = JSON.stringify(systemContent);
         const request = JSON.stringify(plainTextRequestData);
         const prompt = ` ${system} \n ${request}`;
         console.log("Prompt: ", prompt);
 
-        const result = await model.generateContent(prompt);
+        const result = await model.generateContent(prompt, {
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseSchema: schema,
+          },
+        });
 
-        const cleanResponse = result.response
-          .text()
-          .replace(/[*#]+/g, "")
-          .replace(/\n+/g, "\n")
-          .trim();
-        setResponseGemini(cleanResponse);
+        const jsonData = result.response.text();
+        console.log("jsonData: ", jsonData);
+        setResponseGemini(jsonData);
       }
     } catch (error) {
       console.error(error);
@@ -151,6 +152,7 @@ const CompanyReport = () => {
       goal: [],
       focusPoints: "",
       additionalInfo: "",
+      competitors:"",
       textlanguage: "",
       currency: "",
     });
@@ -162,6 +164,7 @@ const CompanyReport = () => {
       goal: [],
       focusPoints: "",
       additionalInfo: "",
+      competitors:"",
       textlanguage: "",
       currency: "",
     });
@@ -233,6 +236,15 @@ const CompanyReport = () => {
               name="additionalInfo"
               placeholder="Additional Info"
               value={companyInfo.additionalInfo}
+              onChange={handleInputChange}
+              required
+              style={{ height: "100px" }}
+            />
+            <textarea
+              className="form-control mb-3"
+              name="competitors"
+              placeholder="Competitors"
+              value={companyInfo.competitors}
               onChange={handleInputChange}
               required
               style={{ height: "100px" }}
@@ -311,7 +323,7 @@ const CompanyReport = () => {
           gptResponse={responseGpt}
           setResponseGpt={setResponseGpt}
         />
-        {/* <GeminiResponse
+        {/* <GeminiResponseCompany
           geminiResponse={responseGemini}
           setResponseGemini={setResponseGemini}
         /> */}

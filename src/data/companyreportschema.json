@@ -237,15 +237,19 @@
           "properties": {
             "name": {
               "type": "string",
-              "description": "Competitor name"
+              "description": "Real competitor name"
             },
             "strategy": {
               "type": "string",
-              "description": "The competitors detailed marketing and advertising strategy"
+              "description": "The real competitors detailed marketing and advertising strategy"
+            },
+            "websiteURL": {
+              "type": "string",
+              "description": "The real competitors website URL"
             }
           },
           "additionalProperties": false,
-          "required": ["name", "strategy"]
+          "required": ["name", "strategy", "websiteURL"]
         },
         "description": "List of at least 3 real competitors, their advertising strategies, strengths and weaknesses and website URLs."
       },

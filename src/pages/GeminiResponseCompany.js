@@ -4,18 +4,15 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { JsonToWord } from '../utils/jsontoword';
 
-const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
+const GeminiResponseCompany = ({ geminiResponse, setResponseGemini }) => {
   const clearResponse = () => {
-    setResponseGpt("");
-    // setGptResponse("");
+    setResponseGemini("");
   };
-  // const [gptResponse, setGptResponse] = useState();
-  // setGptResponse(responseGpt);
-  // console.log("gptResponse : ", gptResponse);
+console.log("geminiResponse : ", geminiResponse);
 
 
   const renderCompanyInfo = () => {
-    if (!gptResponse || !gptResponse.company) {
+    if (!geminiResponse || !geminiResponse.company) {
       return (
         <div>
           <h5>1. Company Information:</h5>
@@ -24,7 +21,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
       );
     }
 
-    const { name, based_in, website } = gptResponse.company;
+    const { name, based_in, website } = geminiResponse.company;
     return (
       <div>
         <h5>1. Company Information:</h5>
@@ -36,7 +33,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   };
 
   const renderGoals = () => {
-    if (!gptResponse || !gptResponse.goals) {
+    if (!geminiResponse || !geminiResponse.goals) {
       return (
         <div>
           <h5>2. Goals:</h5>
@@ -49,7 +46,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
       <div>
         <h5>2. Goals:</h5>
         <ul>
-          {gptResponse.goals.map((goal, index) => (
+          {geminiResponse.goals.map((goal, index) => (
             <li key={index}><strong>{goal.goals} :</strong>  {goal.description}</li>
           ))}
         </ul>
@@ -58,7 +55,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   };
 
   const renderTargetAudience = () => {
-    if (!gptResponse || !gptResponse.target_audience) {
+    if (!geminiResponse || !geminiResponse.target_audience) {
       return (
         <div>
           <h5>3. Target Audience:</h5>
@@ -67,7 +64,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
       );
     }
 
-    const { location, occupation, age_range, gender_distribution, interests } = gptResponse.target_audience;
+    const { location, occupation, age_range, gender_distribution, interests } = geminiResponse.target_audience;
     return (
       <div>
         <h5>3. Target Audience:</h5>
@@ -81,7 +78,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   };
 
   const renderBudget = () => {
-    if (!gptResponse || !gptResponse.budget) {
+    if (!geminiResponse || !geminiResponse.budget) {
       return (
         <div>
           <h5>4. Budget:</h5>
@@ -90,7 +87,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
       );
     }
 
-    const { conversion_rate, cpc_range, initial_budget, convertion_rate_industry_benchmark } = gptResponse.budget;
+    const { conversion_rate, cpc_range, initial_budget, convertion_rate_industry_benchmark } = geminiResponse.budget;
     return (
       <div>
         <h5>4. Budget:</h5>
@@ -108,7 +105,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   };
 
   const renderBudgetTable = () => {
-    if (!gptResponse || !gptResponse.budget_table) {
+    if (!geminiResponse || !geminiResponse.budget_table) {
       return (
         <div>
           <p>No estimated budget table information available.</p>
@@ -132,7 +129,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
             </tr>
           </thead>
           <tbody>
-            {gptResponse.budget_table.map((row, index) => (
+            {geminiResponse.budget_table.map((row, index) => (
               <tr key={index}>
                 <td>{row.monthlyBudget}</td>
                 <td>{row.dailyBudget}</td>
@@ -151,7 +148,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   };
 
   const renderStrategy = () => {
-    if (!gptResponse || !gptResponse.ads_strategy) {
+    if (!geminiResponse || !geminiResponse.ads_strategy) {
       return (
         <div>
           <h5>5. Google Ads Strategy:</h5>
@@ -159,7 +156,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
         </div>
       );
     }
-    const { strategy, types_of_campaigns} = gptResponse.ads_strategy;
+    const { strategy, types_of_campaigns} = geminiResponse.ads_strategy;
     return (
       <div>
         <h5>5. Google Ads Strategy:</h5>
@@ -174,7 +171,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   };
 
   const renderKeywords = () => {
-    if (!gptResponse || !gptResponse.keywords) {
+    if (!geminiResponse || !geminiResponse.keywords) {
       return (
         <div>
           <h5>6. Keywords:</h5>
@@ -187,7 +184,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
       <div>
         <h5>6. Keywords:</h5>
         <ul>
-          {gptResponse.keywords.map((keyword, index) => (
+          {geminiResponse.keywords.map((keyword, index) => (
             <li key={index}>{keyword}</li>
           ))}
         </ul>
@@ -196,7 +193,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   };
 
   const renderLongTailKeywords = () => {
-    if (!gptResponse || !gptResponse.longtailkeywords) {
+    if (!geminiResponse || !geminiResponse.longtailkeywords) {
       return (
         <div>
           <h5>7. Long Tail Keywords:</h5>
@@ -209,7 +206,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
       <div>
         <h5>7. Long Tail Keywords:</h5>
         <ul>
-          {gptResponse.longtailkeywords.map((keyword, index) => (
+          {geminiResponse.longtailkeywords.map((keyword, index) => (
             <li key={index}>{keyword}</li>
           ))}
         </ul>
@@ -218,7 +215,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   };
 
   const renderCallToActions = () => {
-    if (!gptResponse || !gptResponse.call_to_actions) {
+    if (!geminiResponse || !geminiResponse.call_to_actions) {
       return (
         <div>
           <h5>8. Call to Actions:</h5>
@@ -231,7 +228,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
       <div>
         <h5>8. Call to Actions:</h5>
         <ul>
-          {gptResponse.call_to_actions.map((cta, index) => (
+          {geminiResponse.call_to_actions.map((cta, index) => (
             <li key={index}>{cta}</li>
           ))}
         </ul>
@@ -240,7 +237,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   };
 
   const renderCompetitorAnalysis = () => {
-    if (!gptResponse || !gptResponse.competitor_analysis) {
+    if (!geminiResponse || !geminiResponse.competitor_analysis) {
       return (
         <div>
           <h5>9. Competitor Analysis:</h5>
@@ -253,7 +250,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
       <div>
         <h5>9. Competitor Analysis:</h5>
         <ul>
-          {gptResponse.competitor_analysis.map((competitor, index) => (
+          {geminiResponse.competitor_analysis.map((competitor, index) => (
             <li key={index}>
               <strong>{competitor.name}:</strong> {competitor.strategy}
               <br />
@@ -266,7 +263,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   };
 
   // const renderVisualRecommendations = () => {
-  //   if (!gptResponse || !gptResponse.visual_recommendations) {
+  //   if (!geminiResponse || !geminiResponse.visual_recommendations) {
   //     return (
   //       <div>
   //         <h5>9. Visual Recommendations:</h5>
@@ -275,7 +272,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   //     );
   //   }
 
-  //   const { visual_content, video_content } = gptResponse.visual_recommendations;
+  //   const { visual_content, video_content } = geminiResponse.visual_recommendations;
   //   return (
   //     <div>
   //       <h5>9. Visual Recommendations:</h5>
@@ -286,7 +283,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   // };
 
   const renderConclusion = () => {
-    if (!gptResponse || !gptResponse.conclusion) {
+    if (!geminiResponse || !geminiResponse.conclusion) {
       return (
         <div>
           <h5>10. Conclusion:</h5>
@@ -298,7 +295,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
     return (
       <div>
         <h5>10. Conclusion:</h5>
-        <p>{gptResponse.conclusion}</p>
+        <p>{geminiResponse.conclusion}</p>
       </div>
     );
   };
@@ -310,7 +307,7 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
       orientation: "portrait",
     });
 
-    const content = document.getElementById("gpt-response-content");
+    const content = document.getElementById("gemini-response-content");
     html2canvas(content).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const imgWidth = 21;
@@ -330,23 +327,23 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
         heightLeft -= pageHeight;
       }
 
-      doc.save("ChatGpt_Response.pdf");
+      doc.save("Gemini_Response.pdf");
     });
   };
 
   const saveAsWord = () => {
-    JsonToWord(gptResponse);
+    JsonToWord(geminiResponse);
   };
   
 
   return (
-    <div className="col-md-8 d-flex">
+    <div className="col-md-4 d-flex">
       <div
         className="shadow-lg p-4 bg-light rounded flex-fill d-flex flex-column"
         style={{ minHeight: "100%", width: "100%" }}
       >
-        <h4>Response From ChatGpt</h4>
-        <div id="gpt-response-content" style={{ whiteSpace: "pre-wrap", wordWrap: "break-word", flex: 1 }}>
+        <h4>Response From Gemini</h4>
+        <div id="gemini-response-content" style={{ whiteSpace: "pre-wrap", wordWrap: "break-word", flex: 1 }}>
           {renderCompanyInfo() || "No company information available. \n"}
           {renderGoals() || "No goals information available. \n"}
           {renderTargetAudience() || "No target audience information available. \n"}
@@ -389,4 +386,4 @@ const GptResponseCompany = ({ gptResponse, setResponseGpt }) => {
   );
 };
 
-export default GptResponseCompany;
+export default GeminiResponseCompany;
