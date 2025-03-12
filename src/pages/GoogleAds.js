@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import GptResponse from "./GptResponse.js";
 import GeminiResponse from "./GeminiResponse.js";
-// import Anthropic from "./Anthropic.js";
+import Anthropic from "./Anthropic.js";
 
 const GoogleAds = () => {
   const [companyInfo, setCompanyInfo] = useState({ name: "", url: "" });
@@ -244,7 +244,8 @@ const GoogleAds = () => {
             messages: [
               {
                 role: "user",
-                content: JSON.stringify(requestData),
+                // content: JSON.stringify(requestData),
+                content: requestData,
               },
             ],
             max_tokens: 4096,
@@ -253,7 +254,8 @@ const GoogleAds = () => {
           },
           {
             headers: {
-              "x-api-key": `${process.env.REACT_APP_ANTHROPIC_API_KEY}`,
+              // "x-api-key": `${process.env.REACT_APP_ANTHROPIC_API_KEY}`,
+              "Authorization": `Bearer ${process.env.REACT_APP_ANTHROPIC_API_KEY}`,
               "anthropic-version": "2023-06-01",
               "Content-Type": "application/json",
             },
@@ -682,7 +684,7 @@ const GoogleAds = () => {
                 type="button"
                 className="btn btn-primary m-3"
                 onClick={(e) => handleSubmit(e, "anthropic")} // anthropic için tıklama işlevi
-                disabled={true}
+                disabled={isLoading}
               >
                 {" "}
                 Anthropic
